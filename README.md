@@ -1,8 +1,8 @@
 ## Splitter App
 
-Copyright 2019 Tobias Zeising, tobias.zeising@aditu.de  
-https://www.lesestunden.de
-Licensed under the GPLv3 license
+Copyright 2019 Tobias Zeising, tobias.zeising@aditu.de  <br />
+https://www.lesestunden.de<br />
+Licensed under the GPLv3 license<br />
 
 CRAWLER
 -------
