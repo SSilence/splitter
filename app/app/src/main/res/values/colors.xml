@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#8a1100</color>
+    <color name="primaryDark">#333333</color>
+    <color name="accent">#D81B60</color>
+    <color name="overlay">#4B000000</color>
+    <color name="bookinfo">#818A1100</color>
+    <color name="white">#FFFFFF</color>
+    <color name="grey">#666666</color>
+    <color name="transparent">#00666666</color>
+    <item name="divider" type="color">#e2e2e2</item>
+</resources>

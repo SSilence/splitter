@@ -1,0 +1,45 @@
+<resources>
+    <string name="books_json_last_modified">Sat, 22 Jun 2019 10:58:34 GMT</string>
+    <string name="app_name">Splitter</string>
+    <string name="app_subtitle">die inoffzielle App</string>
+    <string name="menu_search">Suche</string>
+    <string name="menu_info">Info</string>
+    <string name="menu_genre">Genre</string>
+    <string name="menu_sort">Sortierung</string>
+    <string name="filter_title">Kategorie: %s</string>
+    <string name="list_error">Fehler beim Laden der Comics</string>
+    <string name="filter_all">Alle Genres</string>
+    <string name="release_desc">neue Bücher zuerst</string>
+    <string name="release_asc">alte Bücher zuerst</string>
+    <string name="title_asc">nach Titel</string>
+    <string name="price_asc">Preis aufsteigend</string>
+    <string name="price_desc">Preis absteigend</string>
+    <string name="detail_isbn">ISBN</string>
+    <string name="detail_genre">Genre</string>
+    <string name="detail_album">Album</string>
+    <string name="detail_release">Erscheinungsdatum</string>
+    <string name="detail_scenario">Szenario</string>
+    <string name="detail_painter">Zeichnung</string>
+    <string name="detail_format">Einband</string>
+    <string name="detail_pages">Seiten</string>
+    <string name="detail_part">Band</string>
+    <string name="detail_price">Preis</string>
+    <string name="detail_preview">Vorschau</string>
+    <string name="detail_part_value">%1$s von %2$s</string>
+    <string name="detail_no_images_error">Keine Vorschaubilder vorhanden</string>
+    <string name="info">Info &amp; Impressum</string>
+    <string name="info_copyright">Tobias Zeising \n<a href="mailto:tobias.zeising@aditu.de">tobias.zeising@aditu.de</a> \n<a href="http://www.aditu.de?pk_campaign=BuchschrankFinder">http://www.aditu.de</a></string>
+    <string name="info_lastmodified">Datenstand: %s</string>
+    <string name="info_about">Über diese App</string>
+    <string name="info_about_text1">Diese App ist ein privates und nicht kommerzielles Projekt vom Buchblogger Tobias Zeising. Wenn du Bücher und Comics liebst und gute Literaturtipps magst, dann besuche einfach meinen Blog: <a href="http://www.lesestunden.de/?pk_campaign=Splitter">www.lesestunden.de</a>. Dort sind auch weitere Informationen zu dieser App zu finden.</string>
+    <string name="info_about_text2">Du magst diese App? Dann spende dem EntwicklerVielleserPowernerd dieser App ein Buch (Tobias Zeising, Deuschlstr. 9, 85567 Grafing) oder ein Bier (<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=H7Q8FJ4VLYEMA">Paypal Spende</a>)</string>
+    <string name="info_credits">Credits</string>
+    <string name="info_credits_text">Die Rechte für die Abbildungen liegen bei Splitter und den jeweiligen Verlagen und Autoren. 2017 © Splitter. Alle Rechte vorbehalten.\n\nIn dieser App werden zahlreiche hervorragende OpenSource Bibliotheken verwendet, deren Entwickler besonderer Dank gebührt: <a href="https://kotlinlang.org/">Kotlin</a>, <a href="https://github.com/ReactiveX/RxJava">RxJava</a>, <a href="http://square.github.io/okhttp/">OkHttp</a>, <a href="http://square.github.io/retrofit">Retrofit</a>, <a href="https://insert-koin.io/">Koin</a>, <a href="https://developer.android.com/jetpack">Android Jetpack</a>, <a href="https://github.com/stfalcon-studio/StfalconImageViewer">StfalconImageViewer</a>, <a href="https://github.com/myinnos/AlphabetIndex-Fast-Scroll-RecyclerView">AlphabetIndex-Fast-Scroll-RecyclerView</a></string>
+    <string name="info_privacy">Datenschutz</string>
+    <string name="info_privacy_text">Die Betreiber dieser App erheben keine Daten, es werden keine Benutzerdaten, Nutzungsprofile oder andere Daten an unsere Server übertragen. Auch auf den Einsatz von Analysetools wie Firebase wurde verzichtet. Es werden von lesestunden.de die Metadaten der verfügbaren Bücher und von splitter-verlag.de die angezeigten Bilder geladen.</string>
+    <string name="info_impress">Impressum</string>
+    <string name="info_impress_text">Tobias Zeising\nDeuschlstr. 9\n85567 Grafing\n\nEmail: <a href="mailto:tobias.zeising@aditu.de">tobias.zeising@aditu.de</a>\nWebseite: <a href="http://www.aditu.de">www.aditu.de</a>\nBlog: <a href="http://www.lesestunden.de">www.lesestunden.de</a>
+        \n\nDiese App enthält Links zu externen Webseiten Dritter, auf deren Inhalte ich keinen Einfluss habe. Deshalb kann ich für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar. Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werde ich derartige Links umgehend entfernen.
+    </string>
+    <string name="detail_book_info_title">Seite %1$d von %2$d, %3$s von %4$s</string>
+</resources>

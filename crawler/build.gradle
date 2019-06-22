@@ -1,0 +1,46 @@
+plugins {
+	id 'org.springframework.boot' version '2.1.4.RELEASE'
+	id 'org.jetbrains.kotlin.jvm' version '1.2.71'
+	id 'org.jetbrains.kotlin.plugin.spring' version '1.2.71'
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+group = 'de.aditu'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.xerial:sqlite-jdbc:3.25.2'
+	implementation 'com.github.gwenn:sqlite-dialect:0.1.0'
+
+	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+	implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.9.8'
+	implementation 'org.jsoup:jsoup:1.11.2'
+	implementation 'org.jetbrains.kotlin:kotlin-reflect'
+	implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+	
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+compileKotlin {
+	kotlinOptions {
+		freeCompilerArgs = ['-Xjsr305=strict']
+		jvmTarget = '1.8'
+	}
+}
+
+compileTestKotlin {
+	kotlinOptions {
+		freeCompilerArgs = ['-Xjsr305=strict']
+		jvmTarget = '1.8'
+	}
+}
