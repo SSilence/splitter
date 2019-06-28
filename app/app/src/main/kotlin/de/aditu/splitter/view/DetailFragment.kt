@@ -73,7 +73,7 @@ class DetailFragment : androidx.fragment.app.Fragment() {
             cover.setOnClickListener { preview(book, images) }
             title.setOnClickListener { preview(book, images) }
 
-            if (book.url.isNullOrEmpty() == false) {
+            if (BuildConfig.SHOW_LINK && book.url.isNullOrEmpty() == false) {
                 open.setOnClickListener { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(book.url))) }
                 open.visibility = View.VISIBLE
             } else {
