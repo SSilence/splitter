@@ -5,7 +5,6 @@ import org.apache.http.client.HttpClient
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
-import org.springframework.stereotype.Service
 import java.net.URI
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ExecutorService
@@ -18,13 +17,13 @@ import org.apache.http.impl.client.HttpClients
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager
 import org.apache.http.message.BasicHeader
 import java.io.InputStream
+import kotlin.concurrent.getOrSet
 
 private const val RETRY_HTTP_CLIENT = 3L
 private const val READ_TIMEOUT_IN_MS = 10000
 private const val CONNECTION_TIMEOUT_IN_MS = 5000
-private const val THREADS = 8
+private const val THREADS = 12
 
-@Service
 class Crawler() {
     fun start(baseUrl: String,
               success: (content: Document, url: String) -> Unit,
@@ -40,7 +39,6 @@ class CrawlerWorker(val baseUrl: String,
     private val executor: ExecutorService = Executors.newFixedThreadPool(THREADS)
     private val processed: ConcurrentHashMap<String, Boolean> = ConcurrentHashMap()
     private val running = AtomicInteger(1)
-    private val httpClient: HttpClient = httpClient()
 
     fun run() {
         scan(baseUrl)
@@ -50,7 +48,7 @@ class CrawlerWorker(val baseUrl: String,
     fun scan(link: String) {
         try {
             val content = try {
-                httpClient.execute(HttpGet(link)).entity.content.readAllToString()
+                httpClient().execute(HttpGet(link)).entity.content.readAllToString()
             } catch (e: Exception) {
                 error(e, link)
                 null
@@ -79,6 +77,20 @@ class CrawlerWorker(val baseUrl: String,
         }
     }
 
+    private fun httpClient() = ThreadLocal<HttpClient>().getOrSet {
+        HttpClients
+                .custom()
+                .setDefaultHeaders(listOf(BasicHeader(USER_AGENT, "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)")))
+                .setDefaultRequestConfig(
+                        RequestConfig.custom()
+                                .setConnectTimeout(CONNECTION_TIMEOUT_IN_MS)
+                                .setConnectionRequestTimeout(READ_TIMEOUT_IN_MS)
+                                .build()
+                )
+                .setRetryHandler { _, executionCount, _ -> executionCount > RETRY_HTTP_CLIENT }
+                .build()
+    }
+
     private fun parseUrl(baseUrl: String, a: Element?): String {
         if (a == null) {
             return ""
@@ -96,20 +108,6 @@ class CrawlerWorker(val baseUrl: String,
         }
         return url.removeHash()
     }
-
-    private fun httpClient() =
-            HttpClients
-                    .custom()
-                    .setConnectionManager(PoolingHttpClientConnectionManager())
-                    .setDefaultHeaders(listOf(BasicHeader(USER_AGENT, "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)")))
-                    .setDefaultRequestConfig(
-                        RequestConfig.custom()
-                                .setConnectTimeout(CONNECTION_TIMEOUT_IN_MS)
-                                .setConnectionRequestTimeout(READ_TIMEOUT_IN_MS)
-                                .build()
-                    )
-                    .setRetryHandler { exception, executionCount, context -> executionCount > RETRY_HTTP_CLIENT }
-                    .build()
 
     private fun String.removeHash() = if (this.contains("#")) this.substring(0, this.indexOf("#")) else this
 

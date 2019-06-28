@@ -3,10 +3,8 @@ package de.aditu.splitter
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.safety.Whitelist
-import org.springframework.stereotype.Component
 import java.text.SimpleDateFormat
 
-@Component
 class Parser {
 
     private val urlToAlbum = mutableMapOf<String, AlbumPage>()
@@ -14,14 +12,14 @@ class Parser {
 
     fun process(content: Document, url: String, baseUrl: String) {
         when {
-            isBookPage(content) -> processBookPage(content, url, baseUrl)
+            isBookPage(content) -> processBookPage(content, url)
             isAlbumPage(url) -> processAlbumPage(content)
         }
     }
 
     fun getAllBooks(): Collection<Book> = books.values
 
-    private fun processBookPage(content: Document, url: String, baseUrl: String) {
+    private fun processBookPage(content: Document, url: String) {
         val metadata = fetchBooksMetaData(content)
         val images = fetchImages(content)
         val genre = if (urlToAlbum[url]?.genre == null && content.select("#breadcrumb_navi > span:nth-child(2) span").html().cleanHtml()?.trim() == "Genre") {
