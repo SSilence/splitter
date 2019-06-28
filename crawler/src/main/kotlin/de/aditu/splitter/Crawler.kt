@@ -1,40 +1,46 @@
 package de.aditu.splitter
 
+import org.apache.http.HttpHeaders.USER_AGENT
+import org.apache.http.client.HttpClient
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import org.springframework.web.reactive.function.client.WebClient
 import java.net.URI
-import java.time.Duration
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
+import org.apache.http.client.config.RequestConfig
+import org.apache.http.client.methods.HttpGet
+import org.apache.http.impl.client.HttpClients
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager
+import org.apache.http.message.BasicHeader
+import java.io.InputStream
 
 private const val RETRY_HTTP_CLIENT = 3L
-private const val READ_TIMEOUT_IN_MS = 10000L
+private const val READ_TIMEOUT_IN_MS = 10000
+private const val CONNECTION_TIMEOUT_IN_MS = 5000
 private const val THREADS = 8
 
 @Service
-class Crawler(@Autowired private val webClient: WebClient) {
+class Crawler() {
     fun start(baseUrl: String,
               success: (content: Document, url: String) -> Unit,
               error: (exception: Throwable, url: String) -> Unit) {
-        CrawlerWorker(baseUrl, webClient, success, error).run()
+        CrawlerWorker(baseUrl, success, error).run()
     }
 }
 
 class CrawlerWorker(val baseUrl: String,
-                    val webClient: WebClient,
                     val success: (content: Document, url: String) -> Unit,
                     val error: (exception: Throwable, url: String) -> Unit) {
 
     private val executor: ExecutorService = Executors.newFixedThreadPool(THREADS)
     private val processed: ConcurrentHashMap<String, Boolean> = ConcurrentHashMap()
     private val running = AtomicInteger(1)
+    private val httpClient: HttpClient = httpClient()
 
     fun run() {
         scan(baseUrl)
@@ -44,7 +50,7 @@ class CrawlerWorker(val baseUrl: String,
     fun scan(link: String) {
         try {
             val content = try {
-                load(link)
+                httpClient.execute(HttpGet(link)).entity.content.readAllToString()
             } catch (e: Exception) {
                 error(e, link)
                 null
@@ -59,8 +65,9 @@ class CrawlerWorker(val baseUrl: String,
 
             for (a in links) {
                 val linkUrl = parseUrl(baseUrl, a)
-                if (isInternalLink(linkUrl, baseUrl) && !processed.containsKey(linkUrl)) {
-                    processed.put(linkUrl, false)
+                val linkPath = linkUrl.replace(baseUrl, "")
+                if (linkUrl.isInternalLink(baseUrl) && !processed.containsKey(linkPath)) {
+                    processed.put(linkPath, false)
                     running.incrementAndGet()
                     executor.submit { scan(linkUrl) }
                 }
@@ -72,18 +79,6 @@ class CrawlerWorker(val baseUrl: String,
         }
     }
 
-    private fun load(url: String)=
-            webClient.mutate().build() // make new instance 4 thread safety
-                .get()
-                .uri(URI.create(url))
-                .retrieve()
-                .bodyToMono(String::class.java)
-                .retry(RETRY_HTTP_CLIENT)
-                .block(Duration.ofMillis(READ_TIMEOUT_IN_MS))
-
-    private fun isInternalLink(link: String, baseUrl: String) = link.toLowerCase().startsWith(baseUrl.toLowerCase())
-
-    // handle ./ links and #hashes
     private fun parseUrl(baseUrl: String, a: Element?): String {
         if (a == null) {
             return ""
@@ -99,8 +94,26 @@ class CrawlerWorker(val baseUrl: String,
                 else -> baseUrl + "/" + url
             }
         }
-        return removeHash(url)
+        return url.removeHash()
     }
 
-    private fun removeHash(url: String) = if (url.contains("#")) url.substring(0, url.indexOf("#")) else url
+    private fun httpClient() =
+            HttpClients
+                    .custom()
+                    .setConnectionManager(PoolingHttpClientConnectionManager())
+                    .setDefaultHeaders(listOf(BasicHeader(USER_AGENT, "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)")))
+                    .setDefaultRequestConfig(
+                        RequestConfig.custom()
+                                .setConnectTimeout(CONNECTION_TIMEOUT_IN_MS)
+                                .setConnectionRequestTimeout(READ_TIMEOUT_IN_MS)
+                                .build()
+                    )
+                    .setRetryHandler { exception, executionCount, context -> executionCount > RETRY_HTTP_CLIENT }
+                    .build()
+
+    private fun String.removeHash() = if (this.contains("#")) this.substring(0, this.indexOf("#")) else this
+
+    private fun String.isInternalLink(baseUrl: String) = this.toLowerCase().startsWith(baseUrl.toLowerCase())
+
+    private fun InputStream.readAllToString() = this.bufferedReader().use { it.readText() }
 }
