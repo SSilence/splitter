@@ -11,21 +11,25 @@ fun main(args: Array<String>) {
     val target = if (args.isNotEmpty()) args[0] else null
     val baseUrl = "https://www.splitter-verlag.de"
     val parser = Parser()
+    var parsed = 0
     Crawler().start(
             baseUrl = baseUrl,
             success = { content, url ->
-                println("$url SUCCESS ${content.body().toString().length} bytes")
-                parser.process(content, url, baseUrl)
+                //println("$url SUCCESS ${content.body().toString().length} bytes")
+                parser.process(content, url)
+                parsed++
             },
             error = { e, url ->
                 System.err.println("$url error ${e.message}")
             })
     println("website crawled")
+    println("${parsed} site parsed")
+    println("books parsed: ${parser.getAllBooks().size}")
 
     val books = jacksonObjectMapper().writeValueAsString(parser.getAllBooks())
     if (target != null) {
         File(target).writeText(books)
-        println("books saved: ${target}")
+        println("books saved: ${target} (${books.length} bytes)")
     }
 
     val hostname = System.getenv("FTP_HOSTNAME")
@@ -35,7 +39,7 @@ fun main(args: Array<String>) {
     val filename = System.getenv("FILENAME")
     if (hostname != null && username != null && password != null) {
         upload(hostname, port, username, password, filename, books)
-        println("books saved: ${hostname}")
+        println("books saved: ${hostname} (${books.length} bytes)")
     }
 
     println("finished")

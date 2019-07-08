@@ -4,13 +4,14 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.safety.Whitelist
 import java.text.SimpleDateFormat
+import java.util.*
 
 class Parser {
 
-    private val urlToAlbum = mutableMapOf<String, AlbumPage>()
-    private val books = mutableMapOf<String, Book>()
+    private val urlToAlbum = Collections.synchronizedMap(mutableMapOf<String, AlbumPage>())
+    private val books = Collections.synchronizedMap(mutableMapOf<String, Book>())
 
-    fun process(content: Document, url: String, baseUrl: String) {
+    fun process(content: Document, url: String) {
         when {
             isBookPage(content) -> processBookPage(content, url)
             isAlbumPage(url) -> processAlbumPage(content)
