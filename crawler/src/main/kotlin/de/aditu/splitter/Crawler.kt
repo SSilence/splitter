@@ -21,8 +21,8 @@ import kotlin.concurrent.getOrSet
 
 private const val RETRY_HTTP_CLIENT = 3L
 private const val READ_TIMEOUT_IN_MS = 10000
-private const val CONNECTION_TIMEOUT_IN_MS = 5000
-private const val THREADS = 12
+private const val CONNECTION_TIMEOUT_IN_MS = 10000
+private const val THREADS = 8
 
 class Crawler() {
     fun start(baseUrl: String,
