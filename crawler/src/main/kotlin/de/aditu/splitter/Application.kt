@@ -12,6 +12,7 @@ fun main(args: Array<String>) {
     val baseUrl = "https://www.splitter-verlag.de"
     val parser = Parser()
     var parsed = 0
+    println("start crawling")
     Crawler().start(
             baseUrl = baseUrl,
             success = { content, url ->
