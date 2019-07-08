@@ -38,6 +38,7 @@ dependencies {
 jar {
 	manifest { attributes 'Main-Class': 'de.aditu.splitter.ApplicationKt' }
 	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+	archiveName = 'splitter-crawler.jar'
 }
 
 task wrapper(type: Wrapper) {
